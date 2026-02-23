@@ -744,9 +744,9 @@
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.67A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
           757-221-2621
         </a>
-        <a href="/cdn-cgi/l/email-protection#b4d9dbdaddd7d59ac0c6d1d9d6d8d5cdf4d9d5c7dbda9ac3d99ad1d0c1">
+        <a href="#" id="emailLink">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          <span class="__cf_email__" data-cfemail="caa7a5a4a3a9abe4beb8afa7a8a6abb38aa7abb9a5a4e4bda7e4afaebf">[email&#160;protected]</span>
+          <span id="emailDisplay"></span>
         </a>
       </div>
       <div class="hero-socials">
@@ -1289,7 +1289,7 @@
     Raymond A. Mason School of Business · William &amp; Mary · Williamsburg, Virginia
   </p>
   <p>
-    <a href="mailto:monica.tremblay@mason.wm.edu">monica.tremblay@mason.wm.edu</a>
+    <a href="#" id="footerEmailLink"><span id="footerEmailDisplay"></span></a>
     &nbsp;·&nbsp;
     <a href="https://www.linkedin.com/in/monicachiarinitremblay/" target="_blank">LinkedIn</a>
     &nbsp;·&nbsp;
@@ -1298,6 +1298,17 @@
 </footer>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // Build email to prevent Cloudflare obfuscation
+  var u = 'monica.tremblay'; var d = 'mason.wm.edu'; var e = u + '@' + d;
+  var el = document.getElementById('emailLink');
+  var ed = document.getElementById('emailDisplay');
+  var fl = document.getElementById('footerEmailLink');
+  var fd = document.getElementById('footerEmailDisplay');
+  if(el){ el.href = 'mailto:' + e; }
+  if(ed){ ed.textContent = e; }
+  if(fl){ fl.href = 'mailto:' + e; }
+  if(fd){ fd.textContent = e; }
+
   // Mark JS as loaded so fade-in animations activate
   document.body.classList.add('js-loaded');
 
