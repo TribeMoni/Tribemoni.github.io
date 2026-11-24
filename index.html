@@ -21,7 +21,7 @@
       --white: #ffffff;
     }
 
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; scroll-padding-top: 64px; -webkit-text-size-adjust: 100%; }
 
     body {
       font-family: 'Lora', Georgia, serif;
@@ -70,9 +70,9 @@
       transition: color .2s;
     }
 
-    .nav-links a:hover { color: var(--gold-light); }
+    .nav-links a:hover, .nav-links a.active { color: var(--gold-light); }
 
-    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: 0; padding: 12px 8px; margin-right: -8px; }
     .hamburger span { width: 24px; height: 2px; background: white; border-radius: 2px; }
 
     /* ── HERO ── */
@@ -696,10 +696,15 @@
       }
       .hamburger { display: flex; }
 
+      #home { padding: 5rem 1.5rem 3rem !important; }
+
       .hero-inner {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
         gap: 2.5rem;
       }
+
+      .hero-socials { flex-wrap: wrap; }
+      .hero-contact a { overflow-wrap: anywhere; }
 
       .hero-photo-wrap { order: -1; }
       .hero-photo-frame { width: 200px; height: 240px; }
@@ -707,6 +712,8 @@
       section { padding: 4rem 1.5rem; }
 
       .service-columns { grid-template-columns: 1fr; }
+      .research-themes, .grants-grid, .courses-grid, .media-grid { grid-template-columns: minmax(0, 1fr); }
+      .award-item { gap: 1rem; padding: 1rem 1.1rem; }
     }
   </style>
 </head>
@@ -724,9 +731,9 @@
     <li><a href="#experience">Experience</a></li>
     <li><a href="#media">Media</a></li>
   </ul>
-  <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+  <button type="button" class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu" aria-controls="navLinks" aria-expanded="false">
     <span></span><span></span><span></span>
-  </div>
+  </button>
 </nav>
 
 <!-- HERO / HOME -->
@@ -1455,21 +1462,51 @@
   document.body.classList.add('js-loaded');
 
   // Mobile menu
+  var navLinks = document.getElementById('navLinks');
+  var hamburger = document.getElementById('hamburger');
   function toggleMenu() {
-    document.getElementById('navLinks').classList.toggle('open');
+    var open = navLinks.classList.toggle('open');
+    hamburger.setAttribute('aria-expanded', open ? 'true' : 'false');
   }
+  // Close the menu after a link is tapped
+  navLinks.querySelectorAll('a').forEach(function (a) {
+    a.addEventListener('click', function () {
+      navLinks.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', 'false');
+    });
+  });
 
   // Fade-in on scroll
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        observer.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.12 });
-
-  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  var fadeEls = document.querySelectorAll('.fade-in');
+  if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0, rootMargin: '0px 0px -40px 0px' });
+    fadeEls.forEach(function (el) { observer.observe(el); });
+  } else {
+    fadeEls.forEach(function (el) { el.classList.add('visible'); });
+  }
 
   // Active nav highlight
-  const sections = document.querySelectorA
+  var sections = document.querySelectorAll('section[id]');
+  var navAnchors = document.querySelectorAll('.nav-links a');
+  function highlightNav() {
+    var current = '';
+    sections.forEach(function (sec) {
+      if (window.scrollY >= sec.offsetTop - 120) { current = sec.id; }
+    });
+    navAnchors.forEach(function (a) {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  }
+  window.addEventListener('scroll', highlightNav, { passive: true });
+  highlightNav();
+</script>
+
+</body>
+</html>
